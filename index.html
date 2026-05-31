@@ -18,7 +18,7 @@
     <link rel="icon" href="favicon.ico" type="image/x-icon" />
 
     <!-- 2. 引入外置 CSS 样式表 -->
-    <link rel="stylesheet" href="style.css?v=05311353c" />
+    <link rel="stylesheet" href="style.css?v=05311353d" />
 </head>
 
 <body>
@@ -39,7 +39,8 @@
             <div class="ambient-bg">
                 <transition name="ambient-fade" mode="default">
                     <div class="ambient-image" :key="current"
-                        :style="{ backgroundImage: `url(https://slkass.com/collections/static/${playlists[current].symbal}.jpg)` }"></div>
+                        :style="{ backgroundImage: `url(https://slkass.com/collections/static/${playlists[current].symbal}.jpg)` }">
+                    </div>
                 </transition>
             </div>
             <div class="slides" :style="{ transform: `translateY(-${current * 100}%)` }">
@@ -47,7 +48,8 @@
                     <div class="card">
                         <div class="cover-wrap">
                             <div class="cover">
-                                <img :src="`https://slkass.com/collections/static/${item.symbal}.jpg`" :alt="item.artist" />
+                                <img :src="`https://slkass.com/collections/static/${item.symbal}.jpg`"
+                                    :alt="item.artist" />
                                 <div class="emotion-label">{{ item.artist }}</div>
 
                                 <!-- 新增:左下角歌词按钮(仅当前页且有歌词时显示) -->
@@ -126,10 +128,43 @@
         </div>
     </div>
 
+    <button class="add-to-desktop" id="installBtn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+        </svg>
+        <span>添加桌面</span>
+    </button>
+
+    <!-- 新增：引导弹窗遮罩与面板 -->
+    <div class="guide-overlay" id="guideOverlay"></div>
+    <div class="guide-sheet" id="guideSheet">
+        <div class="guide-header">
+            <div class="guide-title">添加到主屏幕</div>
+            <button class="guide-close" id="guideCloseBtn">✕</button>
+        </div>
+        <div class="guide-steps">
+            <div class="guide-step">
+                <span class="step-num">1</span>
+                <p class="step-txt">点击 Safari 底部更多工具栏的<strong>分享按钮</strong> <span class="ios-icon">⎋</span></p>
+            </div>
+            <div class="guide-step">
+                <span class="step-num">2</span>
+                <p class="step-txt">在菜单中向下滚动，选择<strong>“添加到主屏幕”</strong> <span class="ios-icon">⊞</span></p>
+            </div>
+            <div class="guide-step">
+                <span class="step-num">3</span>
+                <p class="step-txt">点击右上角的<strong>“添加”</strong>，即可生成桌面快捷 App！</p>
+            </div>
+        </div>
+    </div>
+
     <!-- Vue 3 框架库 -->
     <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
     <!-- 3. 引入外置 JS 逻辑 -->
-    <script src="app.js?v=05311353c"></script>
+    <script src="app.js?v=05311353d"></script>
 </body>
 
 </html>

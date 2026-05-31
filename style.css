@@ -39,7 +39,8 @@ body.lyrics-open .back-home {
   z-index: 0;
   overflow: hidden;
   pointer-events: none;
-  background: transparent;     /* ← 去掉 #000 */
+  background: transparent;
+  /* ← 去掉 #000 */
 }
 
 /* 图片层向下多溢出，确保模糊边缘盖满底部安全区 */
@@ -599,4 +600,158 @@ body.lyrics-open .back-home {
 .lyrics-slide-enter-from .lyrics-panel,
 .lyrics-slide-leave-to .lyrics-panel {
   transform: translateY(100%);
+}
+
+/* ================= 右上角“添加到桌面”按钮 ================= */
+.add-to-desktop {
+  font-family: fantasy;
+  position: fixed;
+
+  /* 关键微调：提升层级，确保在 Vue 渲染的背景之上 */
+  z-index: 99;
+
+  /* 定位：固定在右上角 */
+  top: calc(env(safe-area-inset-top) + 8px);
+  right: clamp(20px, 4vw, 40px);
+  left: auto;
+  bottom: auto;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 999px;
+  background: transparent;
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    background 0.3s ease, box-shadow 0.3s ease;
+  pointer-events: auto;
+}
+
+/* ================= iOS 引导安装弹窗 ================= */
+.guide-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+
+  /* 关键微调：层级必须高于按钮（99），设为 100 */
+  z-index: 100;
+
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+/* 当激活时显示遮罩 */
+.guide-overlay.show {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.guide-sheet {
+  position: fixed;
+  bottom: -100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 500px;
+  background: #1c1c1e;
+  border-radius: 24px 24px 0 0;
+  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5);
+
+  /* 关键微调：层级必须高于遮罩层（100），设为 101 */
+  z-index: 101;
+
+  padding: 24px 24px calc(24px + env(safe-area-inset-bottom)) 24px;
+  transition: bottom 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* 当激活时滑出面板 */
+.guide-sheet.show {
+  bottom: 0;
+}
+
+.guide-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.guide-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.guide-close {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: #fff;
+  width: 30px;
+  height: 30px;
+  font-size: 18px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.guide-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.guide-step {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.step-num {
+  background: #0a84ff;
+  /* iOS 经典蓝色 */
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.step-txt {
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.5;
+}
+
+.step-txt strong {
+  color: #fff;
+}
+
+.ios-icon {
+  background: rgba(255, 255, 255, 0.15);
+  padding: 2px 6px;
+  border-radius: 6px;
+  font-size: 16px;
+  margin-left: 4px;
+  display: inline-block;
+  vertical-align: middle;
 }

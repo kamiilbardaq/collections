@@ -12,6 +12,49 @@ createApp({
         let locked = false;
         const showLyrics = ref(false);
 
+        // ================= [修改] 抽离出来的初始化函数 =================
+        function initInstallGuide() {
+            const installBtn = document.getElementById('installBtn');
+            const guideOverlay = document.getElementById('guideOverlay');
+            const guideSheet = document.getElementById('guideSheet');
+            const guideCloseBtn = document.getElementById('guideCloseBtn');
+
+            if (!installBtn) return;
+
+            // 检测是否已经添加到主屏幕（Standalone 模式）
+            const isStandalone = window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches;
+
+            if (isStandalone) {
+                installBtn.style.display = 'none';
+                return;
+            }
+
+            // 点击 INSTALL 按钮
+            installBtn.addEventListener('click', () => {
+                const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
+                if (!isIOS) {
+                    alert("提示：请在 iPhone 的 Safari 浏览器中打开此页面，即可添加到桌面。");
+                    return;
+                }
+
+                if (guideOverlay && guideSheet) {
+                    guideOverlay.classList.add('show');
+                    guideSheet.classList.add('show');
+                }
+            });
+
+            // 关闭弹窗
+            function closeGuide() {
+                if (guideOverlay) guideOverlay.classList.remove('show');
+                if (guideSheet) guideSheet.classList.remove('show');
+            }
+
+            if (guideCloseBtn) guideCloseBtn.addEventListener('click', closeGuide);
+            if (guideOverlay) guideOverlay.addEventListener('click', closeGuide);
+        }
+        //////////////////////////////////////////////
+
         // 把 lyrics 字符串按行拆成数组
         const lyricLines = Vue.computed(() => {
             const raw = playlists.value[current.value]?.lyrics || "";
@@ -20,13 +63,11 @@ createApp({
 
         function openLyrics() {
             showLyrics.value = true;
-            document.body.classList.add('lyrics-open');  
-
-            // if (audioEl.value) audioEl.value.pause(); // 可选:打开歌词时暂停,想保持播放就删掉这行
+            document.body.classList.add('lyrics-open');
         }
         function closeLyrics() {
             showLyrics.value = false;
-            document.body.classList.remove('lyrics-open'); 
+            document.body.classList.remove('lyrics-open');
         }
 
 
@@ -61,7 +102,6 @@ createApp({
         }
 
         let touchStartY = 0;
-        // 工具函数:判断事件是否发生在可滚动的 reason 区域内
         function isInsideReason(e) {
             const reasonEl = e.target.closest('.reason');
             return reasonEl && reasonEl.scrollHeight > reasonEl.clientHeight;
@@ -69,27 +109,25 @@ createApp({
 
         function onWheel(e) {
             if (showLyrics.value) return;
-            // 在长文案内滚动时,放行原生滚动,不翻页
             if (isInsideReason(e)) return;
-            e.preventDefault();                 // 注意:见下方说明
+            e.preventDefault();
             if (Math.abs(e.deltaY) < 10) return;
             changeSlide(e.deltaY > 0 ? 1 : -1);
         }
 
         function onTouchStart(e) {
             if (showLyrics.value) return;
-            if (isInsideReason(e)) { touchStartY = null; return; } // 标记为"忽略翻页"
+            if (isInsideReason(e)) { touchStartY = null; return; }
             touchStartY = e.touches[0].clientY;
         }
 
         function onTouchEnd(e) {
             if (showLyrics.value) return;
-            if (touchStartY === null) return;   // 来自 reason 的滑动,跳过翻页
+            if (touchStartY === null) return;
             const diff = touchStartY - e.changedTouches[0].clientY;
             if (Math.abs(diff) < 40) return;
             changeSlide(diff > 0 ? 1 : -1);
         }
-
 
         function togglePlay() {
             const el = audioEl.value;
@@ -101,12 +139,10 @@ createApp({
         function onAudioError() {
             const song = playlists.value[current.value]?.song || "未知曲目";
             console.warn(`⚠️ 音频加载失败:${song}(可能文件损坏或链接失效)`);
-            // 自动跳到下一首,避免卡在坏文件上
             if (current.value < playlists.value.length - 1) {
                 changeSlide(1);
             }
         }
-
 
         function onTimeUpdate() {
             const el = audioEl.value;
@@ -125,7 +161,6 @@ createApp({
             }
         }
 
-        // 点击进度条跳转
         function seek(e) {
             const el = audioEl.value;
             if (!el || !el.duration) return;
@@ -143,27 +178,33 @@ createApp({
 
         onMounted(async () => {
             try {
-                // 请确保 playlists.json 路径正确
+                // 1. 先加载数据
                 const response = await fetch('./playlists.json');
                 if (!response.ok) {
                     throw new Error(`无法加载 playlists.json: ${response.status}`);
                 }
                 playlists.value = await response.json();
 
+                // 2. 等待 Vue 将数据完全渲染成 DOM（Loading 消失，Slider 出现）
                 nextTick(() => {
                     loadAndPlay(false);
+
+                    // 3. 此时 DOM 已经绝对稳定，在这里绑定事件，万无一失！
+                    initInstallGuide();
                 });
             } catch (error) {
                 console.error("加载配置文件失败:", error);
+                // 即使失败，也尝试初始化一下绑定
+                initInstallGuide();
             }
         });
+
 
         return {
             playlists, current, audioEl, isPlaying,
             currentTime, duration, progress,
             onWheel, onTouchStart, onTouchEnd, goTo,
             togglePlay, onTimeUpdate, onLoaded, onEnded, seek, formatTime,
-            // 新增 ↓
             showLyrics, lyricLines, openLyrics, closeLyrics, onAudioError
         };
 
