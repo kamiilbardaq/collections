@@ -50,33 +50,30 @@ body.lyrics-open .back-home {
   transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
-
 .ambient-bg {
   position: fixed;
-  /* 铺满整个视觉视口，含安全区 */
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  /* 双保险：用 100dvh 强制等于完整视口 */
-  height: 100dvh;
+  /* 关键：高度用 100vh（含底部物理区），而非 100dvh */
+  height: 100vh;
   z-index: 0;
-  /* 在内容层(1)之下，但在 body 之上 */
   overflow: hidden;
   pointer-events: none;
-  background: #000;
+  background: transparent;     /* ← 去掉 #000 */
 }
 
 /* 图片层向下多溢出，确保模糊边缘盖满底部安全区 */
 .ambient-image {
   position: absolute;
-  /* 四周溢出，底部多给，确保 Home 区被模糊图盖满 */
-  top: -15%;
-  left: -15%;
-  right: -15%;
-  bottom: -15%;
-  width: 130%;
-  height: 130%;
+  /* 四周大幅溢出，底部尤其多给，彻底盖住 Home 区 */
+  top: -20%;
+  left: -20%;
+  right: -20%;
+  bottom: -20%;
+  width: 140%;
+  height: 140%;
   background-size: cover;
   background-position: center;
   filter: blur(80px) saturate(1.6) brightness(0.55);
