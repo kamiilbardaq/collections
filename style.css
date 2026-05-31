@@ -171,17 +171,6 @@ body.lyrics-open .back-home {
   pointer-events: auto;
 }
 
-/* 移动端同步提升保底值 */
-@media (max-width: 768px) {
-  .back-home {
-    top: max(44px, calc(env(safe-area-inset-top) + 16px));
-    left: 16px;
-    padding: 8px 14px;
-    font-size: 12px;
-    z-index: 20;
-  }
-}
-
 .back-home:hover {
   color: #fff;
   transform: translateX(-4px);
@@ -493,8 +482,7 @@ body.lyrics-open .back-home {
   }
 
   .back-home {
-    /* 修复：移动端下也加上顶部安全距离，并增加 12px 的额外偏移以避开 iOS 时间显示 */
-    top: max(16px, calc(env(safe-area-inset-top) + 12px));
+    top: max(44px, calc(env(safe-area-inset-top) + 16px));
     left: 16px;
     padding: 8px 14px;
     font-size: 12px;
