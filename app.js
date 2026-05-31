@@ -30,7 +30,7 @@ createApp({
         function loadAndPlay(autoplay = true) {
             const el = audioEl.value;
             if (!el || playlists.value.length === 0) return;
-            el.src = "https://slkass.com/collections/static/" + playlists.value[current.value].mp3;
+            el.src = "https://slkass.com/collections/static/" + playlists.value[current.value].symbal + ".mp3";
             el.load();
             if (autoplay) {
                 el.play().catch(() => { isPlaying.value = false; });

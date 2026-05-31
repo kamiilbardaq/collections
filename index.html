@@ -46,7 +46,7 @@
             <div class="ambient-bg">
                 <transition name="ambient-fade" mode="default">
                     <div class="ambient-image" :key="current"
-                        :style="{ backgroundImage: `url(https://slkass.com/collections/static/${playlists[current].cover})` }"></div>
+                        :style="{ backgroundImage: `url(https://slkass.com/collections/static/${playlists[current].symbal}.jpg)` }"></div>
                 </transition>
             </div>
             <div class="slides" :style="{ transform: `translateY(-${current * 100}vh)` }">
@@ -54,7 +54,7 @@
                     <div class="card">
                         <div class="cover-wrap">
                             <div class="cover">
-                                <img :src="`https://slkass.com/collections/static/${item.cover}`" :alt="item.artist" />
+                                <img :src="`https://slkass.com/collections/static/${item.symbal}.jpg`" :alt="item.artist" />
                                 <div class="emotion-label">{{ item.artist }}</div>
 
                                 <!-- 新增:左下角歌词按钮(仅当前页且有歌词时显示) -->
