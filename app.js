@@ -20,10 +20,13 @@ createApp({
 
         function openLyrics() {
             showLyrics.value = true;
+            document.body.classList.add('lyrics-open');  
+
             // if (audioEl.value) audioEl.value.pause(); // 可选:打开歌词时暂停,想保持播放就删掉这行
         }
         function closeLyrics() {
             showLyrics.value = false;
+            document.body.classList.remove('lyrics-open'); 
         }
 
 
