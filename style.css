@@ -54,19 +54,28 @@ body.lyrics-open .back-home {
 
 .ambient-bg {
   position: fixed;
+  /* 铺满整个视觉视口，含安全区 */
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
+  /* 双保险：用 100dvh 强制等于完整视口 */
+  height: 100dvh;
   z-index: 0;
+  /* 在内容层(1)之下，但在 body 之上 */
   overflow: hidden;
   pointer-events: none;
   background: #000;
 }
 
+/* 图片层向下多溢出，确保模糊边缘盖满底部安全区 */
 .ambient-image {
   position: absolute;
-  inset: -15%;
+  /* 四周溢出，底部多给，确保 Home 区被模糊图盖满 */
+  top: -15%;
+  left: -15%;
+  right: -15%;
+  bottom: -15%;
   width: 130%;
   height: 130%;
   background-size: cover;
@@ -80,6 +89,7 @@ body.lyrics-open .back-home {
   from {
     transform: scale(1.1);
   }
+
   to {
     transform: scale(1.25);
   }
@@ -103,14 +113,6 @@ body.lyrics-open .back-home {
   background: radial-gradient(circle at 30% 40%,
       rgba(0, 0, 0, 0.25),
       rgba(0, 0, 0, 0.75) 90%);
-}
-
-.slides {
-  position: relative;
-  z-index: 1;
-  height: 100%;              /* 撑满 slider */
-  transition: transform 0.85s cubic-bezier(0.7, 0, 0.2, 1);
-  will-change: transform;
 }
 
 .dots,
@@ -138,7 +140,8 @@ body.lyrics-open .back-home {
 .back-home {
   position: fixed;
   z-index: 20;
-  top: calc(env(safe-area-inset-top) + 8px);   /* 62 + 8 = 70px，稳妥避开 */
+  top: calc(env(safe-area-inset-top) + 8px);
+  /* 62 + 8 = 70px，稳妥避开 */
   left: clamp(20px, 4vw, 40px);
   display: flex;
   align-items: center;
@@ -156,7 +159,7 @@ body.lyrics-open .back-home {
   font-weight: 600;
   letter-spacing: 1px;
   transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-              background 0.3s ease, box-shadow 0.3s ease;
+    background 0.3s ease, box-shadow 0.3s ease;
   pointer-events: auto;
 }
 
@@ -197,12 +200,21 @@ body.lyrics-open .back-home {
   overflow: hidden;
 }
 
+.slides {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  transition: transform 0.85s cubic-bezier(0.7, 0, 0.2, 1);
+  will-change: transform;
+}
+
 .slide {
-  height: 100%;              /* ← 原来是 100dvh，改成 100% */
+  height: 100%;
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
+  /* 内容层：用 padding 避让安全区（内容不进 Home 区） */
   padding: clamp(24px, 5vw, 80px);
   padding-top: calc(clamp(24px, 5vw, 80px) + env(safe-area-inset-top));
   padding-bottom: calc(clamp(24px, 5vw, 80px) + env(safe-area-inset-bottom));
@@ -430,6 +442,7 @@ body.lyrics-open .back-home {
 }
 
 @keyframes bounce {
+
   0%,
   100% {
     transform: translateX(-50%) translateY(0);
@@ -508,7 +521,8 @@ body.lyrics-open .back-home {
 .lyrics-overlay {
   position: fixed;
   inset: 0;
-  z-index: 25; /* 确保在返回按钮之上 */
+  z-index: 25;
+  /* 确保在返回按钮之上 */
   background: rgba(0, 0, 0, 0.92);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
