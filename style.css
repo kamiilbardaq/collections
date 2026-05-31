@@ -263,6 +263,7 @@ body.lyrics-open .back-home {
   text-shadow: 0 2px 18px rgba(0, 0, 0, 0.9);
   line-height: 1.1;
   max-width: 80%;
+  color: white;
 }
 
 /* ================= 唱片标签容器 ================= */
@@ -305,6 +306,7 @@ body.lyrics-open .back-home {
   letter-spacing: -1px;
   line-height: 1.05;
   margin-bottom: 6px;
+  color: white;
 }
 
 .info .artist {
