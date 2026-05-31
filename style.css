@@ -20,18 +20,17 @@ body {
   inset: 0;
 }
 
-body::after {
+/* body::after {
   content: "";
   position: fixed;
   left: 0;
   right: 0;
   bottom: 0;
-  /* 覆盖底部安全区（Home Indicator）区域 */
   height: calc(env(safe-area-inset-bottom) + 100px);
   background: #000;
   z-index: -1;
   pointer-events: none;
-}
+} */
 
 #app {
   height: 100%;
