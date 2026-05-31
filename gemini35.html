@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <!-- 关键:viewport 加 viewport-fit=cover,让内容延伸到刘海区 -->
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+
+    <!-- iOS Web Clip 全屏模式 -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <!-- 状态栏透明融入背景(关键,消除顶部黑条) -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>slkass's collection 0.1</title>
+
+    <!-- 1. 添加 favicon.ico 支持 -->
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+    <link rel="icon" href="favicon.ico" type="image/x-icon" />
+
+    <!-- 2. 引入外置 CSS 样式表 -->
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+    <div id="app" v-cloak>
+        <!-- 返回主页按钮 -->
+        <a href="https://slkass.com" class="back-home">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            <span>SLKASS</span>
+        </a>
+
+        <!-- 数据加载前的友好提示 -->
+        <div v-if="emotions.length === 0" class="loading-screen">
+            Loading..
+        </div>
+
+        <!-- 数据加载完成后渲染 -->
+        <div v-else class="slider" @wheel="onWheel" @touchstart.passive="onTouchStart" @touchend.passive="onTouchEnd">
+
+            <div class="ambient-bg">
+                <transition name="ambient-fade" mode="default">
+                    <div class="ambient-image" :key="current"
+                        :style="{ backgroundImage: `url(https://slkass.com/collection01/static/${emotions[current].cover})` }"></div>
+                </transition>
+            </div>
+            <div class="slides" :style="{ transform: `translateY(-${current * 100}vh)` }">
+                <div class="slide" v-for="(item, idx) in emotions" :key="idx">
+                    <div class="card">
+                        <div class="cover-wrap">
+                            <div class="cover">
+                                <img :src="`https://slkass.com/collection01/static/${item.cover}`" :alt="item.artist" />
+                                <div class="emotion-label">{{ item.artist }}</div>
+
+                                <!-- 新增:左下角歌词按钮(仅当前页且有歌词时显示) -->
+                                <button class="lyrics-btn" v-if="idx === current && item.lyrics" @click="openLyrics">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <line x1="4" y1="6" x2="20" y2="6"></line>
+                                        <line x1="4" y1="12" x2="14" y2="12"></line>
+                                        <line x1="4" y1="18" x2="18" y2="18"></line>
+                                    </svg>
+                                    <span>歌词</span>
+                                </button>
+                            </div>
+                            <div class="album-float">
+                                {{ item.rate }}
+                            </div>
+                        </div>
+
+
+                        <div class="info">
+                            <div class="song-title">「{{ item.song }}」</div>
+                            <div class="artist">{{ item.artist }}</div>
+                            <p class="reason">{{ item.reason }}</p>
+
+                            <!-- 仅当前页显示控制条 -->
+                            <div class="player" v-if="idx === current">
+                                <button class="play-btn" @click="togglePlay">
+                                    {{ isPlaying ? '❚❚' : '▶' }}
+                                </button>
+                                <div class="progress-wrap">
+                                    <div class="progress-bar" @click="seek($event)">
+                                        <div class="progress-fill" :style="{ width: progress + '%' }"></div>
+                                    </div>
+                                    <div class="time">
+                                        <span>{{ formatTime(currentTime) }}</span>
+                                        <span>{{ formatTime(duration) }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dots">
+                <div v-for="(item, idx) in emotions" :key="idx" class="dot" :class="{ active: current === idx }"
+                    @click="goTo(idx)"></div>
+            </div>
+
+            <div class="hint" v-if="current < emotions.length - 1">向下滑动 ∨</div>
+
+            <!-- 全局唯一播放器(逻辑控制) -->
+            <audio ref="audioEl" @timeupdate="onTimeUpdate" @loadedmetadata="onLoaded" @ended="onEnded"
+                @error="onAudioError" @play="isPlaying = true" @pause="isPlaying = false"></audio>
+
+            <!-- 新增:全屏歌词面板 -->
+            <transition name="lyrics-slide">
+                <div class="lyrics-overlay" v-if="showLyrics" @click.self="closeLyrics">
+                    <div class="lyrics-panel">
+                        <div class="lyrics-header">
+                            <div class="lyrics-title">
+                                「{{ emotions[current].song }}」
+                                <span class="lyrics-artist">{{ emotions[current].artist }}</span>
+                            </div>
+                            <button class="lyrics-close" @click="closeLyrics">✕</button>
+                        </div>
+                        <div class="lyrics-body">
+                            <p class="lyrics-line" v-for="(line, i) in lyricLines" :key="i">
+                                {{ line || '·' }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </transition>
+
+        </div>
+    </div>
+
+    <!-- Vue 3 框架库 -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+    <!-- 3. 引入外置 JS 逻辑 -->
+    <script src="app.js"></script>
+</body>
+
+</html>
