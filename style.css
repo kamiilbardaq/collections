@@ -12,14 +12,11 @@
 html,
 body {
   height: 100%;
-  height: 100vh;       /* 回退 */
   height: 100dvh;
   overflow: hidden;
   background: #000;
-  color: #fff;
   position: fixed;
   width: 100%;
-  /* 关键新增：强制铺满整个安全区，避免底部留黑 */
   inset: 0;
 }
 
@@ -58,27 +55,21 @@ body.lyrics-open .back-home {
 /* ================= 动态模糊背景层 (已修复底部黑边) ================= */
 .ambient-bg {
   position: fixed;
-  /* 用 0 而非 -5%，配合下方扩展确保完整覆盖 */
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  /* 关键：向四周溢出，彻底盖住底部 Home Indicator 区域 */
-  height: 100vh;
-  height: 100dvh;
-  /* 强制延伸到屏幕物理底部 */
-  min-height: 100%;
   z-index: 0;
   overflow: hidden;
   pointer-events: none;
+  background: #000;       /* 自带黑底兜底 */
 }
 
 .ambient-image {
   position: absolute;
-  /* 扩大边缘，防止高斯模糊导致边缘露出白/黑边 */
   inset: -15%;
   width: 130%;
-  height: 135%;
+  height: 130%;
   background-size: cover;
   background-position: center;
   filter: blur(80px) saturate(1.6) brightness(0.55);
@@ -148,8 +139,7 @@ body.lyrics-open .back-home {
 .back-home {
   position: fixed;
   z-index: 20;
-  /* 关键：保底值从 24 提升，并叠加安全区，避开运营商信息 */
-  top: max(44px, calc(env(safe-area-inset-top) + 16px));
+  top: calc(env(safe-area-inset-top) + 8px);   /* 62 + 8 = 70px，稳妥避开 */
   left: clamp(20px, 4vw, 40px);
   display: flex;
   align-items: center;
@@ -482,7 +472,7 @@ body.lyrics-open .back-home {
   }
 
   .back-home {
-    top: max(44px, calc(env(safe-area-inset-top) + 16px));
+    top: calc(env(safe-area-inset-top) + 8px);
     left: 16px;
     padding: 8px 14px;
     font-size: 12px;

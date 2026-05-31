@@ -18,20 +18,10 @@
     <link rel="icon" href="favicon.ico" type="image/x-icon" />
 
     <!-- 2. 引入外置 CSS 样式表 -->
-    <link rel="stylesheet" href="style.css" />
-
+    <link rel="stylesheet" href="style.css?v=05311353" />
 </head>
 
 <body>
-    <div id="safe-debug" style="
-        position: fixed; top: 50%; left: 50%;
-        transform: translate(-50%,-50%);
-        z-index: 99999; background: rgba(255,0,0,0.85);
-        color:#fff; padding:16px; font-size:13px;
-        border-radius:8px; line-height:1.8; text-align:left;
-        font-family: monospace; pointer-events:none;">
-        检测中...
-    </div>
     <div id="app" v-cloak>
         <!-- 返回主页按钮 -->
         <a href="https://slkass.com" class="back-home">
@@ -54,8 +44,7 @@
             <div class="ambient-bg">
                 <transition name="ambient-fade" mode="default">
                     <div class="ambient-image" :key="current"
-                        :style="{ backgroundImage: `url(https://slkass.com/collections/static/${playlists[current].symbal}.jpg)` }">
-                    </div>
+                        :style="{ backgroundImage: `url(https://slkass.com/collections/static/${playlists[current].symbal}.jpg)` }"></div>
                 </transition>
             </div>
             <div class="slides" :style="{ transform: `translateY(-${current * 100}vh)` }">
@@ -63,8 +52,7 @@
                     <div class="card">
                         <div class="cover-wrap">
                             <div class="cover">
-                                <img :src="`https://slkass.com/collections/static/${item.symbal}.jpg`"
-                                    :alt="item.artist" />
+                                <img :src="`https://slkass.com/collections/static/${item.symbal}.jpg`" :alt="item.artist" />
                                 <div class="emotion-label">{{ item.artist }}</div>
 
                                 <!-- 新增:左下角歌词按钮(仅当前页且有歌词时显示) -->
@@ -146,33 +134,7 @@
     <!-- Vue 3 框架库 -->
     <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
     <!-- 3. 引入外置 JS 逻辑 -->
-    <script src="app.js"></script>
-    <script>
-        function showSafe() {
-            const s = getComputedStyle(document.documentElement);
-            const el = document.getElementById('safe-debug');
-            // 通过临时元素读取 env 实际计算值
-            const probe = document.createElement('div');
-            probe.style.cssText = `
-      position:fixed; top:env(safe-area-inset-top);
-      bottom:env(safe-area-inset-bottom);
-      left:env(safe-area-inset-left);
-      right:env(safe-area-inset-right);
-      visibility:hidden;`;
-            document.body.appendChild(probe);
-            const r = probe.getBoundingClientRect();
-            el.innerHTML =
-                'innerHeight: ' + window.innerHeight + '<br>' +
-                'screen.height: ' + window.screen.height + '<br>' +
-                'top inset: ' + getComputedStyle(probe).top + '<br>' +
-                'bottom inset: ' + getComputedStyle(probe).bottom + '<br>' +
-                'standalone: ' + (window.navigator.standalone) + '<br>' +
-                'dvh ratio: ' + (window.innerHeight) + 'px';
-            document.body.removeChild(probe);
-        }
-        showSafe();
-        window.addEventListener('resize', showSafe);
-    </script>
+    <script src="app.js?v=05311353"></script>
 </body>
 
 </html>
