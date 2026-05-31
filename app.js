@@ -2,7 +2,7 @@ const { createApp, ref, watch, computed, onMounted, nextTick } = Vue;
 
 createApp({
     setup() {
-        const emotions = ref([]);
+        const playlists = ref([]);
         const current = ref(0);
         const audioEl = ref(null);
         const isPlaying = ref(false);
@@ -14,7 +14,7 @@ createApp({
 
         // 把 lyrics 字符串按行拆成数组
         const lyricLines = Vue.computed(() => {
-            const raw = emotions.value[current.value]?.lyrics || "";
+            const raw = playlists.value[current.value]?.lyrics || "";
             return raw.split("\n");
         });
 
@@ -29,8 +29,8 @@ createApp({
 
         function loadAndPlay(autoplay = true) {
             const el = audioEl.value;
-            if (!el || emotions.value.length === 0) return;
-            el.src = "https://slkass.com/collection01/static/" + emotions.value[current.value].mp3;
+            if (!el || playlists.value.length === 0) return;
+            el.src = "https://slkass.com/collections/static/" + playlists.value[current.value].mp3;
             el.load();
             if (autoplay) {
                 el.play().catch(() => { isPlaying.value = false; });
@@ -44,7 +44,7 @@ createApp({
         function changeSlide(direction) {
             if (locked) return;
             const next = current.value + direction;
-            if (next < 0 || next >= emotions.value.length) return;
+            if (next < 0 || next >= playlists.value.length) return;
             locked = true;
             current.value = next;
             setTimeout(() => { locked = false; }, 900);
@@ -96,10 +96,10 @@ createApp({
         }
 
         function onAudioError() {
-            const song = emotions.value[current.value]?.song || "未知曲目";
+            const song = playlists.value[current.value]?.song || "未知曲目";
             console.warn(`⚠️ 音频加载失败:${song}(可能文件损坏或链接失效)`);
             // 自动跳到下一首,避免卡在坏文件上
-            if (current.value < emotions.value.length - 1) {
+            if (current.value < playlists.value.length - 1) {
                 changeSlide(1);
             }
         }
@@ -117,7 +117,7 @@ createApp({
 
         function onEnded() {
             isPlaying.value = false;
-            if (current.value < emotions.value.length - 1) {
+            if (current.value < playlists.value.length - 1) {
                 changeSlide(1);
             }
         }
@@ -140,12 +140,12 @@ createApp({
 
         onMounted(async () => {
             try {
-                // 请确保 emotions.json 路径正确
-                const response = await fetch('./emotions.json');
+                // 请确保 playlists.json 路径正确
+                const response = await fetch('./playlists.json');
                 if (!response.ok) {
-                    throw new Error(`无法加载 emotions.json: ${response.status}`);
+                    throw new Error(`无法加载 playlists.json: ${response.status}`);
                 }
-                emotions.value = await response.json();
+                playlists.value = await response.json();
 
                 nextTick(() => {
                     loadAndPlay(false);
@@ -156,7 +156,7 @@ createApp({
         });
 
         return {
-            emotions, current, audioEl, isPlaying,
+            playlists, current, audioEl, isPlaying,
             currentTime, duration, progress,
             onWheel, onTouchStart, onTouchEnd, goTo,
             togglePlay, onTimeUpdate, onLoaded, onEnded, seek, formatTime,

@@ -36,7 +36,7 @@
         </a>
 
         <!-- 数据加载前的友好提示 -->
-        <div v-if="emotions.length === 0" class="loading-screen">
+        <div v-if="playlists.length === 0" class="loading-screen">
             Loading..
         </div>
 
@@ -46,15 +46,15 @@
             <div class="ambient-bg">
                 <transition name="ambient-fade" mode="default">
                     <div class="ambient-image" :key="current"
-                        :style="{ backgroundImage: `url(https://slkass.com/collection01/static/${emotions[current].cover})` }"></div>
+                        :style="{ backgroundImage: `url(https://slkass.com/collections/static/${playlists[current].cover})` }"></div>
                 </transition>
             </div>
             <div class="slides" :style="{ transform: `translateY(-${current * 100}vh)` }">
-                <div class="slide" v-for="(item, idx) in emotions" :key="idx">
+                <div class="slide" v-for="(item, idx) in playlists" :key="idx">
                     <div class="card">
                         <div class="cover-wrap">
                             <div class="cover">
-                                <img :src="`https://slkass.com/collection01/static/${item.cover}`" :alt="item.artist" />
+                                <img :src="`https://slkass.com/collections/static/${item.cover}`" :alt="item.artist" />
                                 <div class="emotion-label">{{ item.artist }}</div>
 
                                 <!-- 新增:左下角歌词按钮(仅当前页且有歌词时显示) -->
@@ -100,11 +100,11 @@
             </div>
 
             <div class="dots">
-                <div v-for="(item, idx) in emotions" :key="idx" class="dot" :class="{ active: current === idx }"
+                <div v-for="(item, idx) in playlists" :key="idx" class="dot" :class="{ active: current === idx }"
                     @click="goTo(idx)"></div>
             </div>
 
-            <div class="hint" v-if="current < emotions.length - 1">向下滑动 ∨</div>
+            <div class="hint" v-if="current < playlists.length - 1">向下滑动 ∨</div>
 
             <!-- 全局唯一播放器(逻辑控制) -->
             <audio ref="audioEl" @timeupdate="onTimeUpdate" @loadedmetadata="onLoaded" @ended="onEnded"
@@ -116,8 +116,8 @@
                     <div class="lyrics-panel">
                         <div class="lyrics-header">
                             <div class="lyrics-title">
-                                「{{ emotions[current].song }}」
-                                <span class="lyrics-artist">{{ emotions[current].artist }}</span>
+                                「{{ playlists[current].song }}」
+                                <span class="lyrics-artist">{{ playlists[current].artist }}</span>
                             </div>
                             <button class="lyrics-close" @click="closeLyrics">✕</button>
                         </div>
