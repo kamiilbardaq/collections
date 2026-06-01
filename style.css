@@ -55,7 +55,7 @@ body.lyrics-open .back-home {
   height: 140%;
   background-size: cover;
   background-position: center;
-  filter: blur(80px) saturate(1.6) brightness(0.55);
+  filter: blur(15px) saturate(1.6) brightness(0.55);
   transform: scale(1.1);
   animation: ambientBreath 20s ease-in-out infinite alternate;
 }
