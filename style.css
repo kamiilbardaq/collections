@@ -113,7 +113,6 @@ body.lyrics-open .back-home {
 
 /* ================= 返回主页按钮 (已修复遮挡与状态栏重叠) ================= */
 .back-home {
-  font-family: fantasy;
   position: fixed;
   z-index: 20;
   top: calc(env(safe-area-inset-top) + 8px);
