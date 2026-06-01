@@ -12,6 +12,17 @@ createApp({
         let locked = false;
         const showLyrics = ref(false);
 
+        // 1. 在 setup() 内部定义检测函数
+        function checkStandaloneMode() {
+            const isStandalone = window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches;
+            if (isStandalone) {
+                document.body.classList.add('standalone-mode');
+            } else {
+                document.body.classList.remove('standalone-mode');
+            }
+            return isStandalone;
+        }
+
         // ================= [修改] 抽离出来的初始化函数 =================
         function initInstallGuide() {
             const installBtn = document.getElementById('installBtn');
@@ -21,8 +32,8 @@ createApp({
 
             if (!installBtn) return;
 
-            // 检测是否已经添加到主屏幕（Standalone 模式）
-            const isStandalone = window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches;
+            // 使用刚才定义的方法
+            const isStandalone = checkStandaloneMode();
 
             if (isStandalone) {
                 installBtn.style.display = 'none';
@@ -177,6 +188,7 @@ createApp({
         }
 
         onMounted(async () => {
+            checkStandaloneMode();
             try {
                 // 1. 先加载数据
                 const response = await fetch('./playlists.json');
