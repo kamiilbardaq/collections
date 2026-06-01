@@ -460,6 +460,9 @@ body.lyrics-open .back-home {
     padding: 8px 14px;
     z-index: 20;
   }
+  .add-to-desktop {
+    display: flex;
+  }
 }
 
 
@@ -615,7 +618,8 @@ body.lyrics-open .back-home {
   left: auto;
   bottom: auto;
 
-  display: flex;
+  /* display: flex; */
+  display: none;
   align-items: center;
   gap: 8px;
   padding: 10px 20px;
