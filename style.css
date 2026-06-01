@@ -279,6 +279,9 @@ body.lyrics-open .back-home {
   line-height: 1.05;
   margin-bottom: 6px;
   color: white;
+  max-width: 90dvw;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .info .artist {
@@ -460,8 +463,9 @@ body.lyrics-open .back-home {
     padding: 8px 14px;
     z-index: 20;
   }
+
   .add-to-desktop {
-    display: flex;
+    display: flex!important;
   }
 }
 
