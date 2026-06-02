@@ -14,20 +14,17 @@ html,
 body {
   margin: 0;
   padding: 0;
-  width: 100%;
-  height: 100%;
+  width: 100dvw;
+  height: 100dvh;
   background: #000;
   overflow: hidden;
 }
 
 #app {
-  min-height: 100vh;
-  min-height: 100dvh;
+  height: 100%;
   width: 100%;
   position: relative;
-  background: #000;
 }
-
 
 [v-cloak] .lyrics-overlay {
   display: none !important;
@@ -41,37 +38,34 @@ body.lyrics-open .back-home {
   transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
-body.lyrics-open .add-to-desktop {
-  opacity: 0;
-  pointer-events: none;
-  transform: translateY(-20px);
-  transition: opacity 0.3s ease, transform 0.3s ease;
-}
-
 .ambient-bg {
   position: fixed;
-  /* 使用 inset: 0 强行让背景图铺满包括刘海屏和底部在内的所有物理区域 */
-  inset: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  /* 关键：高度用 100vh（含底部物理区），而非 100dvh */
   height: 100vh;
-  /* 覆盖整个物理屏幕 */
   z-index: 0;
   overflow: hidden;
   pointer-events: none;
+  background: transparent;
+  /* ← 去掉 #000 */
 }
 
 /* 图片层向下多溢出，确保模糊边缘盖满底部安全区 */
 .ambient-image {
   position: absolute;
-  top: -10%;
-  left: -10%;
-  right: -10%;
-  bottom: -10%;
-  width: 120%;
-  height: 120%;
+  /* 四周大幅溢出，底部尤其多给，彻底盖住 Home 区 */
+  top: -20%;
+  left: -20%;
+  right: -20%;
+  bottom: -20%;
+  width: 140%;
+  height: 140%;
   background-size: cover;
   background-position: center;
-  filter: blur(20px) saturate(1.6) brightness(0.55);
-  /* 稍微加大模糊，边缘过渡更自然 */
+  filter: blur(15px) saturate(1.6) brightness(0.55);
   transform: scale(1.1);
   animation: ambientBreath 20s ease-in-out infinite alternate;
 }
@@ -130,7 +124,7 @@ body.lyrics-open .add-to-desktop {
 /* ================= 返回主页按钮 (已修复遮挡与状态栏重叠) ================= */
 .back-home {
   position: fixed;
-  z-index: 25;
+  z-index: 20;
   top: calc(env(safe-area-inset-top) + 8px);
   left: clamp(20px, 4vw, 40px);
   display: flex;
@@ -186,9 +180,6 @@ body.lyrics-open .add-to-desktop {
   height: 100dvh;
   width: 100%;
   overflow: hidden;
-  /* 增加 padding 限制内容活动区域 */
-  padding-top: env(safe-area-inset-top);
-  padding-bottom: env(safe-area-inset-bottom);
 }
 
 .slides {
@@ -292,19 +283,15 @@ body.lyrics-open .add-to-desktop {
 }
 
 .info .song-title {
-  font-size: clamp(20px, 5vw, 48px);
+  font-size: clamp(28px, 5vw, 56px);
   font-weight: 800;
   letter-spacing: -1px;
+  line-height: 1.05;
+  margin-bottom: 6px;
   color: white;
   max-width: 90dvw;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  /* 这里写你想要限制的最大行数，比如 4 行 */
   overflow: hidden;
   text-overflow: ellipsis;
-  word-break: break-all;
-  /* 确保长英文或无空格字符也能正常换行截断 */
 }
 
 .info .artist {
@@ -456,7 +443,7 @@ body.lyrics-open .add-to-desktop {
 @media (max-width: 768px) {
   .card {
     flex-direction: column;
-    gap: 20px;
+    gap: 36px;
   }
 
   .cover-wrap {
@@ -484,9 +471,12 @@ body.lyrics-open .add-to-desktop {
     top: calc(env(safe-area-inset-top) + 8px);
     left: 16px;
     padding: 8px 14px;
-    z-index: 25;
+    z-index: 20;
   }
 
+  .add-to-desktop {
+    display: flex!important;
+  }
 }
 
 
@@ -555,10 +545,6 @@ body.lyrics-open .add-to-desktop {
   font-size: clamp(20px, 3vw, 28px);
   font-weight: 800;
   line-height: 1.3;
-  max-width: 80dvw;
-  overflow: hidden;
-  color: white;
-  text-overflow: ellipsis;
 }
 
 .lyrics-artist {
@@ -632,12 +618,6 @@ body.lyrics-open .add-to-desktop {
   transform: translateY(100%);
 }
 
-@media (min-width: 768px) {
-  .add-to-desktop {
-    display: no;
-  }
-}
-
 /* ================= 右上角“添加到桌面”按钮 ================= */
 .add-to-desktop {
   font-family: fantasy;
@@ -652,7 +632,8 @@ body.lyrics-open .add-to-desktop {
   left: auto;
   bottom: auto;
 
-  display: flex;
+  /* display: flex; */
+  display: none;
   align-items: center;
   gap: 8px;
   padding: 10px 20px;
