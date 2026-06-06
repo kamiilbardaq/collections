@@ -47,18 +47,21 @@ body.lyrics-open .add-to-desktop {
 
 .ambient-bg {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  /* 关键：高度用 100vh（含底部物理区），而非 100dvh */
-  height: 100dvh;
+  /* 1. 使用 inset: 0 替代 top/left/right/bottom，强制拉伸至铺满视口 */
+  inset: 0; 
+  
+  /* 2. 移除 height: 100dvh，避免与定位拉伸冲突 */
+  width: 100%;
   z-index: 0;
   overflow: hidden;
   pointer-events: none;
   background: transparent;
-  /* ← 去掉 #000 */
+  
+  /* 3. 开启硬件加速，防止 iOS 滚动或缩放时背景出现白边/闪烁 */
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
 }
+
 
 /* 图片层向下多溢出，确保模糊边缘盖满底部安全区 */
 .ambient-image {
