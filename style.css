@@ -38,6 +38,13 @@ body.lyrics-open .back-home {
   transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
+body.lyrics-open .add-to-desktop {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-20px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
 .ambient-bg {
   position: fixed;
   top: 0;
@@ -45,7 +52,7 @@ body.lyrics-open .back-home {
   right: 0;
   bottom: 0;
   /* 关键：高度用 100vh（含底部物理区），而非 100dvh */
-  height: 100vh;
+  height: 100dvh;
   z-index: 0;
   overflow: hidden;
   pointer-events: none;
@@ -539,6 +546,7 @@ body.lyrics-open .back-home {
   padding-bottom: 20px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.12);
   flex-shrink: 0;
+  color: white;
 }
 
 .lyrics-title {
